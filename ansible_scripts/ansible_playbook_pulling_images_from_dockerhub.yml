@@ -1,0 +1,26 @@
+---
+- hosts: all
+  become: yes
+
+  tasks:
+
+  - name: stop docker container
+    command: docker stop docker-container
+    ignore_errors: yes
+
+
+  - name: remove docker container
+    command: docker rm docker-container
+    ignore_errors: yes
+
+  - name: remove docker image from server
+    command: docker rmi sachdeva/image-via-playbook2:latest
+    ignore_errors: yes
+
+  - name: pulling image from dockerhub to server
+    command: docker pull sachdeva/image-via-playbook2:latest
+    ignore_errors: yes
+
+  - name: create container
+    command: docker run -d --name docker-container -p 8080:8080 sachdeva/image-via-playbook2:latest
+    ignore_errors: yes

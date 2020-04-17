@@ -1,0 +1,23 @@
+---
+- hosts: all
+  become: yes
+
+  tasks:
+
+  - name: create image based on dockerfile in server
+    command: docker build -t image-via-playbook2:latest .
+    args:
+      chdir: /opt/docker
+    ignore_errors: yes
+
+  - name: tagging docker fle to send it to dockerhub
+    command: docker tag image-via-playbook2 sachdeva/image-via-playbook2
+    ignore_errors: yes
+
+  - name: pushing the tagged docker image to dockerhub
+    command: docker push sachdeva/image-via-playbook2
+    ignore_errors: yes
+
+  - name: remove old docker images
+    command: docker rmi image-via-ansible
+    ignore_errors: yes

@@ -1,0 +1,26 @@
+---
+- hosts: all
+  become: yes
+
+  tasks:
+
+  - name: stop old running containers
+    command: docker stop container-via-ansible
+    ignore_errors: yes
+
+  - name: remove old running containers
+    command: docker rm container-via-ansible
+    ignore_errors: yes
+
+  - name: remove old docker images
+    command: docker rmi image-via-ansible
+    ignore_errors: yes
+
+  - name: bild docker file and create image using ansible playbook
+    command: docker build -t image-via-ansible .
+    args:
+      chdir: /opt/docker
+
+
+  - name: Create container from above image
+    command: docker run -d --name container-via-ansible -p 8080:8080 image-via-ansible
